@@ -17,7 +17,8 @@ char* get_ip() {
   {
     printf( "gethostname() 실행 실패/n");
     exit( 1);
-  }                 
+  }       
+  
 
   host_entry = gethostbyname( host_name);
 

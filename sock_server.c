@@ -108,8 +108,6 @@ int main(int argc, char *argv[]) {
 
         // 클라이언트 요청 및 응답 처리
         while(1) {
-          memset(&msg, 0, sizeof(msg)); // 메모리 초기화
-
           // 클라이언트의 요청 데이터 읽기
           if (read(clnt_fd, &msg, sizeof(msg)) > 0) {
 

@@ -59,12 +59,12 @@ void print_log(char log_path[]) {
     if (log_size < 11) {
       log_size = 1;
       for (int i = 0; i < 10; i++) {
-      lseek(log_fd, -i * sizeof(log_data), SEEK_SET);
-      if (read(log_fd, &log_data, sizeof(log_data)) == 0) {
-        break;
+        lseek(log_fd, -i * sizeof(log_data), SEEK_SET);
+        if (read(log_fd, &log_data, sizeof(log_data)) == 0) {
+          break;
+        }
+        log_size++;
       }
-      log_size++;
-  }
     }
 
     // UI 출력
