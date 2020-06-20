@@ -30,5 +30,9 @@ void save_log(char* data, RECEIVE_RECORD msg, int fd, char* port) {
     tm.tm_sec
   );
   
-  write(fd, &msg, sizeof(msg));
+  // 저장될 로그 형식에 맞춰 변환된 메세지를 파일(fd)에 저장
+  if (write(fd, &msg, sizeof(msg)) == -1) {
+    puts("save_log() 쓰기 에러");
+    exit(0);
+  }
 }

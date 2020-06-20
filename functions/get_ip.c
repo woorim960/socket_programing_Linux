@@ -7,6 +7,7 @@
 #include <sys/socket.h>
 #include <netdb.h>
 
+// 현재 호스트의 아이피를 반환해주는 함수
 char* get_ip() {
 
   char host_name[80];
@@ -32,6 +33,7 @@ char* get_ip() {
   // for ( ndx = 0; NULL != host_entry->h_addr_list[ndx]; ndx++)
   //     printf( "%s\n", inet_ntoa( *(struct in_addr*)host_entry->h_addr_list[ndx]));
 
+  // 아이피가 있으면 반환해줌, 아이피가 여러개일 경우 첫 번째의 아이피만 반환해주도록 하였음.
   if (host_entry->h_addr_list[0]) {
     return inet_ntoa( *(struct in_addr*)host_entry->h_addr_list[0]);
   }

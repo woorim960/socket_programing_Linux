@@ -57,20 +57,40 @@ int main(int argc, char *argv[]) {
     puts("클라이언트 소켓 연결 에러(1)!");
     exit(1);
   } else {
-    save_log("새로운 연결 생성", msg, sock_fd, argv[2]);
+    // 연결에 성공했다면 "새로운 연결 생성" 메세지를 서버에게 전달
+    if (write(sock_fd, "새로운 연결 생성", MASSAGE_SIZE) == -1) {
+      puts("클라이언트 새로운 연결 생성 메세지 전달 에러");
+      exit(0);
+    }
   }
 
   // 서버에게 데이터 요청 및 응답처리
   while(1) {
+    // 클라이언트 메세지 입력
     fgets(msg.message, MASSAGE_SIZE, stdin);
     msg.message[strlen(msg.message) -1] = '\0'; // fgets는 문자열의 맨 끝에 개행 문자를 삽입하게 되므로 개행문자를 지워줘야한다. 여기서는 문자열의 맨 끝임을 알리는 '\0'으로 대신해주었다.
     
-    save_log(msg.message, msg, sock_fd, argv[2]);
+    // 입력한 메세지 서버로 전달
+    if (write(sock_fd, msg.message, MASSAGE_SIZE) == -1) {
+      puts("클라이언트 입력 메세지 전달 에러");
+      exit(0);
+    }
     
+    // 입력 메세지가 exit이면 실행
     if (!strncmp(msg.message, "exit", 4)) {
-      read(sock_fd, exit_msg, 4);
+      // 서버가 exit 메세지를 전달받고 다시 클라이언트에게 재전송된 exit읽기
+      if (read(sock_fd, exit_msg, 4) == -1) {
+        puts("서버가 전달한 클라이언트 종료 메세지 읽기 에러");
+        exit(0);
+      }
+
+      // 서버가 전달한 메세지가 exit이면 실행
       if (!strncmp(exit_msg, "exit", 4)) {
-        save_log("클라이언트 연결 종료", msg, sock_fd, argv[2]);
+        // "클라이언트 연결 종료 메세지" 서버에게 전달 후 반복문을 빠져나가 프로그램 종료
+        if (write(sock_fd, "클라이언트 연결 종료", MASSAGE_SIZE) == -1) {
+          puts("클라이언트 연결 종료 메세지 전달 에러");
+          exit(0);
+        }
         break;
       }
     }
